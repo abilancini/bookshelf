@@ -6,7 +6,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Title/>
+        <h1>Create Your Bookshelf, Nerd!</h1>
         <SearchBar/>
       </div>
     )
