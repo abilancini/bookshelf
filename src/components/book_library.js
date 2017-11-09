@@ -6,38 +6,29 @@ import BookShelf from './bookshelf';
 
 var books = require('google-books-search');
 
-export default class SearchBar extends Component {
+export default class BookLibrary extends Component {
   constructor(props) {
     super(props);
     this.state = {
       results: [],
       selectedBook: null,
-      term: '',
       bookShelfList: []
     };
+  }
 
-  books.search(this.state.term, (error, data) => {
-      if ( ! error ) {
-          this.setState({
-            results: data,
-            selectedBook: data[0]
-          })
-      } else {
-          console.log(error);
-      }
-    });
+  componentWillReceiveProps(nextProps) {
+    if (this.props.term !== nextProps.term && nextProps.term) {
+      this.search(nextProps.term);
+    }
   }
 
   render() {
-    const bookSearch = _.debounce((e) => { this.updateSearch(); }, 300);
-
     console.log("here's the search results: ", this.state.results);
     console.log("Here's the bookShelfList: ", this.state.bookShelfList)
     console.log("here's the selectedBook: ", this.state.selectedBook)
+    console.log("here's the term: ", this.props.term)
     return (
     <div>
-      Search:
-      <input className="search-bar" ref="query" placeholder="Type your search terms here" onChange={ bookSearch } type="text"/>
       <SearchResults
         onBookSelect={ selectedBook => this.setState({selectedBook}) }
         results={this.state.results}/>
@@ -50,11 +41,7 @@ export default class SearchBar extends Component {
     );
   }
 
-  updateSearch() {
-    this.search(this.refs.query.value);
-  }
-
-  search(term="") {
+  search(term) {
     books.search(term, (error, data) => {
       if ( ! error ) {
         this.setState({
