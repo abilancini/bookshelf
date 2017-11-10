@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export default class SearchBar extends React.Component {
+export default class SearchBar extends Component {
   render() {
     const bookSearch = _.debounce((term) => {
       this.props.onTermChange(term);

@@ -1,25 +1,16 @@
 import React, { Component } from 'react';
-import SearchResults from './searchresults';
 import BookDetail from './bookdetail';
 import _ from 'lodash';
 import BookShelf from './bookshelf';
-
-var books = require('google-books-search');
+import CardCatalog from './card_catalog';
 
 export default class BookLibrary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      results: [],
-      selectedBook: null,
+      selectedBook: undefined,
       bookShelfList: []
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.term !== nextProps.term && nextProps.term) {
-      this.search(nextProps.term);
-    }
   }
 
   render() {
@@ -29,9 +20,10 @@ export default class BookLibrary extends Component {
     console.log("here's the term: ", this.props.term)
     return (
     <div>
-      <SearchResults
+      <CardCatalog
+        term={this.props.term}
         onBookSelect={ selectedBook => this.setState({selectedBook}) }
-        results={this.state.results}/>
+      />
       <BookDetail
         book={this.state.selectedBook}
         onBookShelfSelect={ selectedBook => this.setState({ bookShelfList: [...this.state.bookShelfList, selectedBook]}) }
@@ -41,16 +33,5 @@ export default class BookLibrary extends Component {
     );
   }
 
-  search(term) {
-    books.search(term, (error, data) => {
-      if ( ! error ) {
-        this.setState({
-          results: data,
-          selectedBook: data[0]
-        })
-      } else {
-        console.log(error);
-      }
-    })
-  }
+
 }
