@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import BookLibrary from './book_library';
 import SearchBar from './search_bar';
+import { connect } from 'react-redux';
+import { setTerm } from '../actions';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      term: ''
-    }
-  }
-
+class App extends Component {
   updateSearchTerm(term) {
-    this.setState({term});
+    this.props.setTerm(term);
+    console.log("i got to updateSearchTerm and term is ", term);
   }
 
   render() {
@@ -20,8 +16,14 @@ export default class App extends Component {
         <h1>Create Your Bookshelf, Nerd!</h1>
         <SearchBar
           onTermChange={(term) => { this.updateSearchTerm(term) }}/>
-        <BookLibrary term={this.state.term}/>
+        <BookLibrary />
       </div>
     )
   }
 }
+
+const mapDispatchToProps = {
+  setTerm
+}
+
+export default connect(null, mapDispatchToProps)(App);

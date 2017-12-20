@@ -1,31 +1,25 @@
 import React, { Component } from 'react';
 import BooksList from './books_list';
+import { setResults } from '../actions';
+import { connect } from 'react-redux';
 
 var books = require('google-books-search');
 
-export default class CardCatalog extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      results: []
-    };
-  }
-
+class CardCatalog extends Component {
   componentWillReceiveProps(nextProps) {
     const currentTerm = this.props.term;
     const nextTerm = nextProps.term;
 
     if (nextTerm && currentTerm !== nextTerm) {
       this.search(nextTerm);
+      console.log("CardCatalog says i got here");
     }
   }
 
   search(term) {
     books.search(term, (error, data) => {
       if ( ! error ) {
-        this.setState({
-          results: data
-        });
+        this.props.setResults(data);
       } else {
         console.log(error);
       }
@@ -35,9 +29,21 @@ export default class CardCatalog extends Component {
   render() {
     return (
       <BooksList
-        results={this.state.results}
+        results={this.props.results}
         onBookSelect={this.props.onBookSelect}
       />
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    results: state.results.get('results')
+  };
+}
+
+const mapDispatchToProps = {
+  setResults
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardCatalog);
