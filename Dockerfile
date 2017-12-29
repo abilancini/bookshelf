@@ -17,4 +17,4 @@ ADD webpack.config.js webpack.config.js
 ARG GIT_COMMIT_HASH=unknown
 LABEL GIT_COMMIT=$GIT_COMMIT_HASH
 
-CMD ["npm", "run", "prod"]
+CMD ["npm", "run", "prod"] 
