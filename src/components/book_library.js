@@ -3,35 +3,51 @@ import BookDetail from './bookdetail';
 import _ from 'lodash';
 import BookShelf from './bookshelf';
 import CardCatalog from './card_catalog';
+import { setBookShelfList, setSelectedBook } from '../actions';
+import { connect } from 'react-redux';
 
-export default class BookLibrary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedBook: undefined,
-      bookShelfList: []
-    };
+
+class BookLibrary extends Component {
+  updateSelectedBook(selectedBook) {
+    this.props.setSelectedBook(selectedBook);
+    console.log("UpdateSelectedBook in BookLibrary ran!");
+  }
+
+  updateBookShelfList(selectedBook) {
+    this.props.setBookShelfList(selectedBook);
+    console.log("UpdateBookShelfList in BookLibrary ran!")
+    console.log("selectedBook to add to shelf in book library is ", selectedBook);
   }
 
   render() {
-    console.log("here's the search results: ", this.state.results);
-    console.log("Here's the bookShelfList: ", this.state.bookShelfList)
-    console.log("here's the selectedBook: ", this.state.selectedBook)
-    console.log("here's the term: ", this.props.term)
     return (
     <div>
       <CardCatalog
         term={this.props.term}
-        onBookSelect={ selectedBook => this.setState({selectedBook}) }
+        onBookSelect={ (selectedBook) => { this.updateSelectedBook(selectedBook) }}
       />
       <BookDetail
-        book={this.state.selectedBook}
-        onBookShelfSelect={ selectedBook => this.setState({ bookShelfList: [...this.state.bookShelfList, selectedBook]}) }
+        book={this.props.selectedBook}
+        onBookShelfSelect={ (selectedBook) => { this.updateBookShelfList(selectedBook) }}
       />
-      <BookShelf bookShelfList={this.state.bookShelfList}/>
+      <BookShelf bookShelfList={this.props.bookShelfList}/>
+
     </div>
     );
   }
-
-
 }
+
+function mapStateToProps(state) {
+  return {
+    term: state.books.get('term'),
+    selectedBook: state.selectedBook.get('selectedBook'),
+    bookShelfList: state.shelf.get('bookShelfList')
+  }
+}
+
+const mapDispatchToProps = {
+  setSelectedBook,
+  setBookShelfList
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookLibrary);

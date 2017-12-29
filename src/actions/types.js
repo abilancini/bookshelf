@@ -1,0 +1,4 @@
+export const SET_TERM = 'SET_TERM';
+export const SET_RESULTS = 'SET_RESULTS';
+export const SET_SELECTED_BOOK = 'SET_SELECTED_BOOK';
+export const SET_BOOKSHELFLIST = 'SET_BOOKSHELFLIST';
